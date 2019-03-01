@@ -35,6 +35,11 @@ app.post('/file_upload', upload.single('file'), function(req, res, next) {
         console.log(err);
       }
     });
+    fs.unlink(targetPath, function(err){
+      if(err){
+        console.log(err);
+      }
+    });
     return next();
   }, testing);
 
