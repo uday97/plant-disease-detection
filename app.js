@@ -1,17 +1,19 @@
 var express = require('express');
-var app = express();
 var fs = require("fs");
-
 var bodyParser = require('body-parser');
 var multer  = require('multer');
 const path = require('path');
+const spawn = require("child_process").spawn;
+
+var app = express();
 
 app.use(express.static(__dirname+'/public'));
+
 app.use(bodyParser.urlencoded({ extended: false }));
+
 var upload = multer({ dest: '/tmp/'});
 
 function testing(req, res){
-    const spawn = require("child_process").spawn;
     const pythonPro = spawn('python',["./main_test.py"]);
     pythonPro.stdout.on('data', (data) => {
         res.send(data.toString());
@@ -26,7 +28,6 @@ app.post('/file_upload', upload.single('file'), function(req, res, next) {
  
     const tempPath = req.file.path;
     const targetPath = path.join(__dirname, "./uploads/image.jpg");
-    console.log(req.file);
     fs.rename(tempPath, targetPath, function(err) {
       if (err) {
         console.log(err);
